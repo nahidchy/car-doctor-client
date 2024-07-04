@@ -5,7 +5,7 @@ import { AuthContext } from "../../Providers/AuthProvider";
 const BookService = () => {
     const book = useLoaderData();
     const {user} = useContext(AuthContext);
-    const {price,_id} = book;
+    const {price,_id,title,img} = book;
     const handleBookService =(e)=>{
         e.preventDefault();
         const form = e.target;
@@ -13,8 +13,21 @@ const BookService = () => {
         const date = form.date.value;
         const email = user?.email;
         // const name = form.name.value;
-        const order = {customerName:name,date,email,service:_id,price:price};
-        console.log(order)
+        const booking = {customerName:name,date,email,service_id:_id,service: title,price:price,img};
+        console.log(booking)
+        fetch('http://localhost:5000/bookings',{
+          method:'POST',
+          headers:{
+             'content-type':'application/json'
+          },
+          body:JSON.stringify(booking)
+        })
+        .then(res=>res.json())
+        .then(data=>{
+          if(data.insertedId){
+            alert('Booking successful')
+          }
+        })
     }
     return (
         <div>
